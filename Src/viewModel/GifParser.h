@@ -66,11 +66,16 @@ struct LogicalScreenDescriptor{
     std::istream& parse(std::istream &input)
     {
         beginPosition =  static_cast<int>(input.tellg())+1 ;
-        input.read(reinterpret_cast<char *>(&logicalWidth),sizeof(logicalWidth));
-        input.read(reinterpret_cast<char *>(&logicalHeight),sizeof(logicalHeight));
-        input.read(reinterpret_cast<char *>(&packedFiled),sizeof(packedFiled));
-        input.read(reinterpret_cast<char *>(&backgroundColorIndex),sizeof(backgroundColorIndex));
-        input.read(reinterpret_cast<char *>(&pixelAspectRation),sizeof(pixelAspectRation));
+        input.read(reinterpret_cast<char *>(&logicalWidth),
+                   sizeof(logicalWidth));
+        input.read(reinterpret_cast<char *>(&logicalHeight),
+                   sizeof(logicalHeight));
+        input.read(reinterpret_cast<char *>(&packedFiled),
+                   sizeof(packedFiled));
+        input.read(reinterpret_cast<char *>(&backgroundColorIndex),
+                   sizeof(backgroundColorIndex));
+        input.read(reinterpret_cast<char *>(&pixelAspectRation),
+                   sizeof(pixelAspectRation));
         parsePackFiled();
         endPosition =  static_cast<int>(input.tellg());
         return input;
@@ -140,8 +145,79 @@ struct LogicalScreen{
 
 };
 
-
 std::ostream &operator<<(std::ostream &os, const LogicalScreen &d);
+
+
+
+// 保留block 数据
+struct SubBlock{
+    uint8_t  size;
+    std::vector<uint8_t> data;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream& input)
+    {
+        beginPosition = static_cast<int>(input.tellg())+1;
+        input.read(reinterpret_cast<char*>(&size), sizeof(size));
+        if(size)
+        {
+            data.reserve(size);
+            input.read(reinterpret_cast<char*>(&data),size);
+        }
+        endPosition = static_cast<int>(input.tellg());
+        return input;
+    }
+
+};
+
+std::ostream &operator<<(std::ostream &os, const SubBlock &d);
+
+/*固定12字节 + block terminal*/
+struct ApplicationExtension{
+    uint8_t applicationIntroducer;
+    uint8_t applicationExtensionLabel;
+    uint8_t size;
+    char applicationIndentifier[8] = {0};
+    char applAuthenticationCode[3] = {0};
+
+    //可能存在很多的block
+    std::vector<SubBlock> applicationData;
+//    SubBlock dataBlock;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream  &input){
+        beginPosition = static_cast<int>(input.tellg());
+        input.read(reinterpret_cast<char*>(&applicationIntroducer),
+                   sizeof(applicationIntroducer));
+        input.read(reinterpret_cast<char*>(&applicationExtensionLabel),
+                   sizeof(applicationExtensionLabel));
+        input.read(reinterpret_cast<char*>(&size),
+                   sizeof(size));
+
+        input.read(reinterpret_cast<char*>(applicationIndentifier),
+                   sizeof(applicationIndentifier));
+        input.read(reinterpret_cast<char*>(applAuthenticationCode),
+                   sizeof(applAuthenticationCode));
+
+        while (true)
+        {
+            SubBlock block;
+            block.parse(input);
+            applicationData.push_back(block);
+            if (block.size == 0){
+                break;
+            }
+        }
+        endPosition = static_cast<int>(input.tellg());
+        return input;
+    }
+};
+
+std::ostream &operator<<(std::ostream &os, const ApplicationExtension &d);
 
 
 
@@ -150,7 +226,7 @@ std::ostream &operator<<(std::ostream &os, const LogicalScreen &d);
 //   https://blog.csdn.net/Swallow_he/article/details/76165202
 class GifParser {
 public:
-
+    GifParser();
 };
 
 

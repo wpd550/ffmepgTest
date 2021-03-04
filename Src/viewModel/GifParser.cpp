@@ -48,3 +48,78 @@ std::ostream &operator<<(std::ostream &os, const LogicalScreen &d) {
        << ")";
     return os;
 }
+
+
+std::ostream &operator<<(std::ostream &os, const ApplicationExtension &d) {
+    os << "ApplicationExtension(" << std::endl
+       << "  position=[" << d.beginPosition << "," << d.endPosition << "],\n"
+       << std::hex << std::showbase //
+       << "  extensionIntroducer=" << +d.applicationIntroducer << ",\n"
+       << "  extensionLabel=" << +d.applicationExtensionLabel << ",\n"
+       << std::resetiosflags(std::ios::hex | std::ios::showbase) //
+       << "  blockSize=" << d.size << ",\n"
+       << "  applicationIdentifier=" << d.applicationIndentifier << ",\n"
+       << "  applAuthenticationCode=" << d.applAuthenticationCode << ",\n"
+       << "  ApplicationData=(size=" << d.applicationData.size() << ",\n"
+       << ")";
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const SubBlock &d) {
+    os << "SubBlock("
+       << "position=[" << d.beginPosition << "," << d.endPosition << "],"
+       << "size=" << +d.size; //
+    os << std::hex << std::showbase;
+    for (const auto &u : d.data) {
+        os << static_cast<int>(u);
+    }
+    os << std::resetiosflags(std::ios::hex | std::ios::showbase) //
+       << ")";
+    return os;
+}
+
+
+
+
+
+
+GifParser::GifParser() {
+    std::ifstream input("123.gif",std::ios::in);
+    if(!input)
+    {
+        std::cerr<<"open ifstream"<<"123.gif"<<"failed"<<std::endl;
+    }
+    GifHeader header;
+    header.parse(input);
+    std::cout<<header<<std::endl;
+
+    LogicalScreen logicalScreen;
+    logicalScreen.parse(input);
+    std::cout<<logicalScreen<<std::endl;
+
+    //图形控制扩展块 标志是 0x21
+    while (input.peek() == 0x21){
+        input.get();
+        uint8_t extensionLabel = input.get();
+        input.unget();
+        input.unget();
+
+        switch (extensionLabel) {
+            case 0xff:   //ApplicationExtension
+            {
+                ApplicationExtension applicationExtension;
+                applicationExtension.parse(input);
+                std::cout<<applicationExtension<<std::endl;
+            }break;
+            case 0xfe:
+            {
+
+            }
+            default:{
+
+            }
+        }
+
+    }
+
+}

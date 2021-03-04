@@ -456,6 +456,10 @@ stdio.h
 ../prech.h
 /Users/dong/Developer/ffmpeg/Src/prech.h
 
+/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.cpp
+GifParser.h
+/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.h
+
 /Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.h
 fstream
 -
