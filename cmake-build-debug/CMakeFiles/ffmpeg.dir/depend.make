@@ -41,6 +41,7 @@ CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../include/libswscale/swscale.h
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/main.cpp
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/prech.h
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/viewModel/DemuxingAndDecodingFactor.h
+CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/viewModel/GifParser.h
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/viewModel/MedieInfo.h
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/viewModel/VideoMutex.h
 CMakeFiles/ffmpeg.dir/Src/main.cpp.o: ../Src/viewModel/base.h
@@ -87,6 +88,9 @@ CMakeFiles/ffmpeg.dir/Src/viewModel/DemuxingAndDecodingFactor.cpp.o: ../include/
 CMakeFiles/ffmpeg.dir/Src/viewModel/DemuxingAndDecodingFactor.cpp.o: ../Src/prech.h
 CMakeFiles/ffmpeg.dir/Src/viewModel/DemuxingAndDecodingFactor.cpp.o: ../Src/viewModel/DemuxingAndDecodingFactor.cpp
 CMakeFiles/ffmpeg.dir/Src/viewModel/DemuxingAndDecodingFactor.cpp.o: ../Src/viewModel/DemuxingAndDecodingFactor.h
+
+CMakeFiles/ffmpeg.dir/Src/viewModel/GifParser.cpp.o: ../Src/viewModel/GifParser.cpp
+CMakeFiles/ffmpeg.dir/Src/viewModel/GifParser.cpp.o: ../Src/viewModel/GifParser.h
 
 CMakeFiles/ffmpeg.dir/Src/viewModel/MedieInfo.cpp.o: ../include/libavcodec/avcodec.h
 CMakeFiles/ffmpeg.dir/Src/viewModel/MedieInfo.cpp.o: ../include/libavcodec/bsf.h

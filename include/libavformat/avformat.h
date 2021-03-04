@@ -2548,7 +2548,7 @@ int av_write_uncoded_frame(AVFormatContext *s, int stream_index,
  * It is mostly useful for devices and similar special muxers that use raw
  * video or PCM data and will not serialize it into a byte stream.
  *
- * To test whether it is possible to use it with a given muxer and stream,
+ * To gifParseTest whether it is possible to use it with a given muxer and stream,
  * use av_write_uncoded_frame_query().
  *
  * The caller gives up ownership of the frame and must not access it

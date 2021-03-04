@@ -3273,7 +3273,7 @@ int avcodec_receive_packet(AVCodecContext *avctx, AVPacket *avpkt);
  * - It is perfectly possible to call this function without actually using
  *   the resulting AVHWFramesContext. One use-case might be trying to reuse a
  *   previously initialized AVHWFramesContext, and calling this API function
- *   only to test whether the required frame parameters have changed.
+ *   only to gifParseTest whether the required frame parameters have changed.
  * - Fields that use dynamically allocated values of any kind must not be set
  *   by the user unless setting them is explicitly allowed by the documentation.
  *   If the user sets AVHWFramesContext.free and AVHWFramesContext.user_opaque,

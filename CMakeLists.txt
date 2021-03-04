@@ -19,7 +19,7 @@ IF(USE_MACRO)
     add_definitions("-DUSE_MACRO")
 endif(USE_MACRO)
 
-add_executable(ffmpeg Src/main.cpp Src/prech.h Src/viewModel/VideoMutex.cpp Src/viewModel/VideoMutex.h Src/viewModel/mutex.h Src/viewModel/DemuxingAndDecodingFactor.cpp Src/viewModel/DemuxingAndDecodingFactor.h Src/viewModel/MedieInfo.cpp Src/viewModel/MedieInfo.h Src/viewModel/base.cpp Src/viewModel/base.h Src/viewModel/simpleDecode.h)
+add_executable(ffmpeg Src/main.cpp Src/prech.h Src/viewModel/VideoMutex.cpp Src/viewModel/VideoMutex.h Src/viewModel/mutex.h Src/viewModel/DemuxingAndDecodingFactor.cpp Src/viewModel/DemuxingAndDecodingFactor.h Src/viewModel/MedieInfo.cpp Src/viewModel/MedieInfo.h Src/viewModel/base.cpp Src/viewModel/base.h Src/viewModel/simpleDecode.h Src/viewModel/GifParser.h Src/viewModel/GifParser.cpp)
 
 find_library(rs_Lib  NAMES libavformat.58.65.101.dylib HINT ${PROJECT_SOURCE_DIR}/lib )
 message("libpath =  ${rs_lib}")

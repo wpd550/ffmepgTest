@@ -197,6 +197,33 @@ Src/viewModel/DemuxingAndDecodingFactor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ffmpeg.dir/build.make CMakeFiles/ffmpeg.dir/Src/viewModel/DemuxingAndDecodingFactor.cpp.s
 .PHONY : Src/viewModel/DemuxingAndDecodingFactor.cpp.s
 
+Src/viewModel/GifParser.o: Src/viewModel/GifParser.cpp.o
+
+.PHONY : Src/viewModel/GifParser.o
+
+# target to build an object file
+Src/viewModel/GifParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ffmpeg.dir/build.make CMakeFiles/ffmpeg.dir/Src/viewModel/GifParser.cpp.o
+.PHONY : Src/viewModel/GifParser.cpp.o
+
+Src/viewModel/GifParser.i: Src/viewModel/GifParser.cpp.i
+
+.PHONY : Src/viewModel/GifParser.i
+
+# target to preprocess a source file
+Src/viewModel/GifParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ffmpeg.dir/build.make CMakeFiles/ffmpeg.dir/Src/viewModel/GifParser.cpp.i
+.PHONY : Src/viewModel/GifParser.cpp.i
+
+Src/viewModel/GifParser.s: Src/viewModel/GifParser.cpp.s
+
+.PHONY : Src/viewModel/GifParser.s
+
+# target to generate assembly for a file
+Src/viewModel/GifParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ffmpeg.dir/build.make CMakeFiles/ffmpeg.dir/Src/viewModel/GifParser.cpp.s
+.PHONY : Src/viewModel/GifParser.cpp.s
+
 Src/viewModel/MedieInfo.o: Src/viewModel/MedieInfo.cpp.o
 
 .PHONY : Src/viewModel/MedieInfo.o
@@ -293,6 +320,9 @@ help:
 	@echo "... Src/viewModel/DemuxingAndDecodingFactor.o"
 	@echo "... Src/viewModel/DemuxingAndDecodingFactor.i"
 	@echo "... Src/viewModel/DemuxingAndDecodingFactor.s"
+	@echo "... Src/viewModel/GifParser.o"
+	@echo "... Src/viewModel/GifParser.i"
+	@echo "... Src/viewModel/GifParser.s"
 	@echo "... Src/viewModel/MedieInfo.o"
 	@echo "... Src/viewModel/MedieInfo.i"
 	@echo "... Src/viewModel/MedieInfo.s"

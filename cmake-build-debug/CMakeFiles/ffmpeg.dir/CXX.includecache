@@ -423,6 +423,10 @@ viewModel/MedieInfo.h
 /Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.h
 viewModel/simpleDecode.h
 /Users/dong/Developer/ffmpeg/Src/viewModel/simpleDecode.h
+fstream
+-
+viewModel/GifParser.h
+/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.h
 
 /Users/dong/Developer/ffmpeg/Src/prech.h
 libavutil/channel_layout.h
@@ -448,19 +452,17 @@ iostream
 stdio.h
 -
 
-/Users/dong/Developer/ffmpeg/Src/viewModel/DemuxingAndDecodingFactor.cpp
-DemuxingAndDecodingFactor.h
-/Users/dong/Developer/ffmpeg/Src/viewModel/DemuxingAndDecodingFactor.h
-
 /Users/dong/Developer/ffmpeg/Src/viewModel/DemuxingAndDecodingFactor.h
 ../prech.h
 /Users/dong/Developer/ffmpeg/Src/prech.h
 
-/Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.cpp
-MedieInfo.h
-/Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.h
-../prech.h
-/Users/dong/Developer/ffmpeg/Src/prech.h
+/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.h
+fstream
+-
+iostream
+-
+vector
+-
 
 /Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.h
 string

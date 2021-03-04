@@ -94,6 +94,12 @@
 		<Unit filename="/Users/dong/Developer/ffmpeg/Src/viewModel/DemuxingAndDecodingFactor.h">
 			<Option target="ffmpeg"/>
 		</Unit>
+		<Unit filename="/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.cpp">
+			<Option target="ffmpeg"/>
+		</Unit>
+		<Unit filename="/Users/dong/Developer/ffmpeg/Src/viewModel/GifParser.h">
+			<Option target="ffmpeg"/>
+		</Unit>
 		<Unit filename="/Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.cpp">
 			<Option target="ffmpeg"/>
 		</Unit>
