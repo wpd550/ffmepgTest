@@ -467,6 +467,8 @@ iostream
 -
 vector
 -
+sstream
+-
 
 /Users/dong/Developer/ffmpeg/Src/viewModel/MedieInfo.h
 string

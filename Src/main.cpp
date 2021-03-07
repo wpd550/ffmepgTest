@@ -27,7 +27,9 @@
 
 int main(int argc, char* argv[]){
 
-    GifParser Parse;
+    GifParser gifParse;
+    gifParse.parse();
+
 /*解码*/
 
 //    run();

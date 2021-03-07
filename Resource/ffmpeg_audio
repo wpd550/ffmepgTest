@@ -1,0 +1,13 @@
+avformat_alloc_context();
+
+avformat_open_input
+
+avformat_find_stream_info
+
+avcodec_find_decoder
+
+avcodec_open2
+
+av_read_frame
+
+avcodec_decode_video2

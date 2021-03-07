@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include <sstream>
 
 //GIF 文件头
 struct GifHeader{
@@ -163,13 +163,16 @@ struct SubBlock{
         input.read(reinterpret_cast<char*>(&size), sizeof(size));
         if(size)
         {
-            data.reserve(size);
-            input.read(reinterpret_cast<char*>(&data),size);
+            data.resize(size);
+            input.read(reinterpret_cast<char*>(data.data()),size);
         }
         endPosition = static_cast<int>(input.tellg());
         return input;
     }
 
+    void writer(std::ostream &output){
+        output<<data.data();
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const SubBlock &d);
@@ -190,7 +193,7 @@ struct ApplicationExtension{
     int endPosition;
 
     std::istream& parse(std::istream  &input){
-        beginPosition = static_cast<int>(input.tellg());
+        beginPosition = static_cast<int>(input.tellg())+1;
         input.read(reinterpret_cast<char*>(&applicationIntroducer),
                    sizeof(applicationIntroducer));
         input.read(reinterpret_cast<char*>(&applicationExtensionLabel),
@@ -207,10 +210,10 @@ struct ApplicationExtension{
         {
             SubBlock block;
             block.parse(input);
-            applicationData.push_back(block);
             if (block.size == 0){
                 break;
             }
+            applicationData.push_back(block);
         }
         endPosition = static_cast<int>(input.tellg());
         return input;
@@ -220,6 +223,292 @@ struct ApplicationExtension{
 std::ostream &operator<<(std::ostream &os, const ApplicationExtension &d);
 
 
+struct CommentExtension{
+    uint8_t  introducer;
+    uint8_t  commentLabel;
+
+    std::vector<SubBlock> commentBlock;
+
+    int beginPosition;
+    int endPosition;
+
+
+    std::istream& parse(std::istream& input)
+    {
+        beginPosition = static_cast<int>(input.tellg())+1;
+
+        input.read(reinterpret_cast<char*>(&introducer),
+                   sizeof(introducer));
+        input.read(reinterpret_cast<char*>(&commentLabel),
+                   sizeof(commentLabel));
+
+        while (true)
+        {
+            SubBlock block;
+            block.parse(input);
+            if (block.size == 0){
+                break;
+            }
+            commentBlock.push_back(block);
+        }
+        endPosition = static_cast<int>(input.tellg());
+        return input;
+    }
+};
+
+std::ostream &operator<<(std::ostream &os, const CommentExtension &d);
+
+
+struct GraphicControlExtension{
+    uint8_t introducer;
+    uint8_t GraphicControLabel; //固定为 0xf9
+    uint8_t blockSize;
+    uint8_t packedFields;
+    uint16_t delayTime;
+    uint8_t transparentColorIndex;
+
+    uint8_t blockTerminator; //固定一个字节 0x00
+
+    //packedFields
+    uint8_t reserved;
+    uint8_t disposalMethod;
+    bool  userInputFlag;
+    bool tranparentColorFlag;
+
+    int beginPosition;
+    int endPosition;
+    std::istream& parse(std::istream& input){
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+        input.read(reinterpret_cast<char*>(&introducer),
+                   sizeof(introducer));
+        input.read(reinterpret_cast<char*>(&GraphicControLabel),
+                   sizeof(GraphicControLabel));
+        input.read(reinterpret_cast<char*>(&blockSize),
+                   sizeof(blockSize));
+        input.read(reinterpret_cast<char*>(&packedFields),
+                   sizeof(packedFields));
+        input.read(reinterpret_cast<char*>(&delayTime),
+                   sizeof(delayTime));
+        input.read(reinterpret_cast<char*>(&transparentColorIndex),
+                    sizeof(transparentColorIndex));
+        input.read(reinterpret_cast<char*>(&blockTerminator),
+                   sizeof(blockTerminator));
+        endPosition = static_cast<int>(input.tellg());
+        parsePackFields();
+        return input;
+
+    }
+
+    void parsePackFields(){
+        tranparentColorFlag = (packedFields & 0b00000001);
+        userInputFlag       = (packedFields & 0b00000010) >>1;
+        disposalMethod      = (packedFields & 0b00011100) >>2;
+        reserved            = (packedFields & 0b11100000) >>5;
+    }
+};
+
+std::ostream &operator<<(std::ostream &os, const GraphicControlExtension &d);
+
+/** 一般都不使用这个extension 了  **/
+struct PlainTextExtension{
+    uint8_t introducer;
+    uint8_t plainTextLabel;
+    uint8_t blockSize;
+
+    uint16_t leftPosition;
+    uint16_t topPosition;
+    uint16_t gridWidth;
+    uint16_t gridHeight;
+
+    uint8_t cellWidth;
+    uint8_t cellheight;
+    uint8_t textForgroundColorIndex;
+    uint8_t textBackgoundColorIndex;
+
+    std::vector<SubBlock>plainTextData;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream& input)
+    {
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+        endPosition = input.tellg();
+        return input;
+    }
+
+};
+
+struct ImageDescriptor{
+    uint8_t imageSeparator;
+    uint16_t  leftPosition;
+    uint16_t  topPosition;
+    uint16_t  imageWidth;
+    uint16_t  imageHeight;
+
+    uint8_t  packfields;
+    int beginPosition;
+    int endPosition;
+
+    bool  localColorTableFlag;
+    bool  interlaceFlag;
+    bool  sortFlag;
+    uint8_t reserved;
+    uint8_t sizeofLocalTable;
+
+    std::istream& parse(std::istream& input){
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+
+        input.read(reinterpret_cast<char*>(&imageSeparator),
+                   sizeof(imageSeparator));
+        input.read(reinterpret_cast<char*>(&leftPosition),
+                   sizeof(leftPosition));
+        input.read(reinterpret_cast<char*>(&topPosition),
+                   sizeof(topPosition));
+        input.read(reinterpret_cast<char*>(&imageWidth),
+                   sizeof(imageWidth));
+        input.read(reinterpret_cast<char*>(&imageHeight),
+                   sizeof(imageHeight));
+        input.read(reinterpret_cast<char*>(&packfields),
+                   sizeof(packfields));
+
+        parsePackfields();
+
+        endPosition = input.tellg();
+        return input;
+
+    }
+    void parsePackfields()
+    {
+        localColorTableFlag = (packfields & 0b10000000) >> 7;
+        interlaceFlag       = (packfields & 0b01000000) >> 6;
+        sortFlag            = (packfields & 0b00100000) >> 5;
+        reserved            = (packfields & 0b00011000) >> 3;
+        sizeofLocalTable    = (1 >> (packfields & 0b00000111)) - 1;
+    }
+};
+
+// LZW 压缩算法
+struct TableBaseImageData{
+    uint8_t minimunCodeSize;
+
+    std::vector<SubBlock> imageData;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream &input)
+    {
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+        input.read(reinterpret_cast<char*>(&minimunCodeSize),
+                   sizeof(minimunCodeSize));
+        int i = 0;
+
+        while (true)
+        {
+            i++;
+            SubBlock block;
+            block.parse(input);
+            if(block.size == 0)
+            {
+                break;
+            }
+
+            imageData.push_back(block);
+        }
+        endPosition = static_cast<int>(input.tellg());
+        return input;
+    }
+
+
+    void write(int number)
+    {
+        std::stringstream  ss;
+        std::string fileName = "lzw";
+
+        ss<<fileName<<number<<".lzw";
+
+        std::ofstream  output(ss.str(),std::ios::out);
+        for (SubBlock block :imageData)
+        {
+            block.writer(output);
+        }
+        output.close();
+    }
+};
+
+/*
+ * 1. imageDescriptor
+ * 2. localColorTable
+ * 3. imageData
+ * */
+struct TableBasedImage {
+    ImageDescriptor imageDescriptor;
+    ColorTable localColorTable;
+    TableBaseImageData imageData;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream &input)
+    {
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+        imageDescriptor.parse(input);
+        if(imageDescriptor.localColorTableFlag){
+            localColorTable.parse(input,imageDescriptor.sizeofLocalTable);
+        }
+        imageData.parse(input);
+        endPosition = static_cast<int>(input.tellg());
+        return input;
+    }
+};
+
+
+
+
+
+struct GraphicRenderingBlock
+{
+    enum class Type{
+        Unknow,
+        PlainRTextExtensoin,
+        TableBaseedImage,
+    };
+
+    PlainTextExtension plainTextExtension;
+    TableBasedImage tableBasedImage;
+
+    Type type = Type::Unknow;
+
+    int beginPosition;
+    int endPosition;
+
+    std::istream& parse(std::istream &input)
+    {
+        beginPosition = static_cast<int>(input.tellg()) + 1;
+
+        uint8_t extensionIntroducer = input.get();
+        uint8_t extensionLabel = input.get();
+        input.unget();
+        input.unget();
+
+        //很少用 PlainRTextExtensoin
+        if (extensionIntroducer == 0x21 && extensionLabel == 0x01) {
+            type = Type::PlainRTextExtensoin;
+            plainTextExtension.parse(input);
+        } else {
+            type = Type::TableBaseedImage;
+            tableBasedImage.parse(input);
+        }
+        endPosition = input.tellg();
+        return input;
+    }
+};
+std::ostream &operator<<(std::ostream &os, const GraphicRenderingBlock &d);
+
+
+
+
 
 //gif协议解析器
 //参考https://github.com/k7/practice-ffmpeg/blob/gif/src/gif_parser.cc
@@ -227,6 +516,13 @@ std::ostream &operator<<(std::ostream &os, const ApplicationExtension &d);
 class GifParser {
 public:
     GifParser();
+    GifParser(std::string fileName);
+
+    void parse();
+
+private:
+    std::string filePath;
+
 };
 
 
